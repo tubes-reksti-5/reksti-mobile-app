@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "OfficeNexus",
-    "slug": "OfficeNexus",
+    "name": "office-nexus-app",
+    "slug": "office-nexus-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
