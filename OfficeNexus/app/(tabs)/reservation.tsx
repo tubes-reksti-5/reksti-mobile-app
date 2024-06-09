@@ -40,7 +40,7 @@ export default function TabTwoScreen() {
 
   const fetchData = async () => {
     // const {data, error} = await supabase.from("Reservation").select("*").eq("user_id", userData.user_id)
-    const {data, error} = await supabase.from("Reservation").select("*")
+    const {data, error} = await supabase.from("Reservation").select("*").eq("user_id", userData.user_id)
     if (error){
       console.log("get Reservation fail!",error)
     } else {

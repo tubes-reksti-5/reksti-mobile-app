@@ -9,6 +9,7 @@ import { Event, DateData, TimeData } from '@react-native-community/datetimepicke
 import { AntDesign } from '@expo/vector-icons';
 import { supabase } from '@/utils/supabase';
 import Reservation from './Reservation';
+import { useSession } from './ctx';
 
 interface RoomProps {
     id: string,
@@ -39,6 +40,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
     const [showStartTimePicker, setShowStartTimePicker] = React.useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = React.useState(false);
     const [isAvaible, setAvaible] = React.useState(false)
+    const {signIn,signOut,userData,userEmail,isLoading} = useSession()
     let containerStyle;
 
     function timeStringToSeconds(timeString) {
@@ -146,15 +148,14 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
             reservation_time_start : dateToTime(startTime),
             reservation_time_end : dateToTime(endTime),
             room_number : room_number,
-            room_floor : room_floor
+            room_floor : room_floor,
+            user_id : userData.user_id
+        
         }])
 
         if (error) {
             console.log("reserve Error", error)
         } else {
-            const {data : data2, error : error2} = await supabase.from("reservation_view_log").insert([{
-                
-            }])
 
         }
     }
