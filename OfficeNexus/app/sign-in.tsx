@@ -33,7 +33,7 @@ export default function SignIn() {
         <View style={{ gap: 50 }}>
             <View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 10 }}>
-                    <Image source={require("@/assets/images/logo.webp")} style={{ backgroundColor: '#444444', width: 110, height: 110 }}/>
+                    <Image source={require("@/assets/images/logo.webp")} style={{width: 110, height: 110 }}/>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center'  }}>
                     <Text style={{ fontSize: 32, color: '#444444' }}>
