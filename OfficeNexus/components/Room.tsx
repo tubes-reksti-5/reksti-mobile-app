@@ -7,6 +7,8 @@ import { Text, View } from './Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Event, DateData, TimeData } from '@react-native-community/datetimepicker';
 import { AntDesign } from '@expo/vector-icons';
+import { supabase } from '@/utils/supabase';
+import Reservation from './Reservation';
 
 interface RoomProps {
     id: string,
@@ -71,6 +73,16 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
     
         return formattedDate;
     }
+
+    function dateToTime(dateString) {
+        const date = new Date(dateString);
+        const hour = String(date.getUTCHours() + 1).padStart(2, '0');
+        const minute = String(date.getUTCMinutes()).padStart(2, '0');
+        const formattedDate = `${hour}:${minute}:`;
+    
+        return formattedDate;
+    }
+
     function filterFunc(start1, end1, date1, start2, end2, date2) {
         console.log(start1, end1, date1, start2, end2, date2)
         if (date1 != date2) {
@@ -78,7 +90,6 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
           return false
         }
         else if (end1 < start2 || end2 < start1) {
-            console.log("HAHA")
           return false;
         } else {
           return true;
@@ -129,6 +140,19 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
         setShowDatePicker(false)
     };
 
+    const handleReserve = async () => {
+        const {data, error} = await supabase.from("Reservation").insert([{
+            reservation_date : date,
+            reservation_time_start : dateToTime(startTime),
+            reservation_time_end : dateToTime(endTime),
+            room_number : room_number,
+            room_floor : room_floor
+        }])
+
+        if (error) {
+            console.log("reserve Error", error)
+        }
+    }
     return (
         <View style={containerStyle}>
             <TouchableOpacity onPress={() => {setIsSelected(id)}} disabled={isSelected}>
@@ -222,7 +246,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
                     </Text> }
                     </View>
                     <View  style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}> 
-                        <TouchableOpacity disabled={!isAvaible}>
+                        <TouchableOpacity onPress={() => {handleReserve()}} disabled={!isAvaible}>
                             <View style={styles.button}>
                                 <Text style={[ styles.text, { fontSize: 16, fontWeight: 'bold', color: 'white' }]}>
                                     Reserve
