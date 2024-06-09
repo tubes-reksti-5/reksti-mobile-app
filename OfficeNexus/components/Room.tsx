@@ -80,7 +80,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
         const date = new Date(dateString);
         const hour = String(date.getUTCHours() + 1).padStart(2, '0');
         const minute = String(date.getUTCMinutes()).padStart(2, '0');
-        const formattedDate = `${hour}:${minute}:`;
+        const formattedDate = `${hour}:${minute}`;
     
         return formattedDate;
     }
@@ -152,7 +152,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
             user_id : userData.user_id
         
         }])
-
+        
         if (error) {
             console.log("reserve Error", error)
         } else {

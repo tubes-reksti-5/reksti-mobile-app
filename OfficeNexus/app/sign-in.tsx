@@ -2,7 +2,7 @@ import { router, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Button, Text, TextInput, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useSession } from '../components/ctx';
-
+import { Image } from 'react-native';
 // const screenWidth = Dimensions.get('window').width;
 // const screenHeight = Dimensions.get('window').height;
 
@@ -33,7 +33,7 @@ export default function SignIn() {
         <View style={{ gap: 50 }}>
             <View>
                 <View style={{ justifyContent: 'center', alignItems: 'center', margin: 10 }}>
-                    <View style={{ backgroundColor: '#444444', width: 110, height: 110 }}/>
+                    <Image source={require("@/assets/images/logo.webp")} style={{ backgroundColor: '#444444', width: 110, height: 110 }}/>
                 </View>
                 <View style={{ justifyContent: 'center', alignItems: 'center'  }}>
                     <Text style={{ fontSize: 32, color: '#444444' }}>
