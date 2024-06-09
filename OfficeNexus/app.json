@@ -17,9 +17,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo.webp",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.azkara.officenexusapp"
     },
     "web": {
       "bundler": "metro",
@@ -29,8 +30,6 @@
     "plugins": [
       "expo-router",
       "expo-font"
-
-      
     ],
     "experiments": {
       "typedRoutes": true
