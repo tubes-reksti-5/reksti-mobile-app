@@ -55,7 +55,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
         const seconds = date.getUTCSeconds();
     
         
-        const totalSeconds = (hours * 3600) + (minutes * 60) + seconds + 25200;
+        const totalSeconds = (hours * 3600) + (minutes * 60) + seconds + 25200; //To adjust for timezone
     
         return totalSeconds;
       }
@@ -84,7 +84,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
     }
 
     function filterFunc(start1, end1, date1, start2, end2, date2) {
-        console.log(start1, end1, date1, start2, end2, date2)
+        
         if (date1 != date2) {
             
           return false
@@ -115,7 +115,7 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
     }
 
     React.useEffect( () => {checkAvaible(); 
-        console.log(startTime, endTime)
+        
     } ,[date, startTime, endTime])
 
     const onStartTimeChange = (event: Event, selectedTime: TimeData) => {

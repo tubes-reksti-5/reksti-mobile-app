@@ -3,7 +3,9 @@ import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import Room from '@/components/Room';
 import Reservation from '@/components/Reservation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/utils/supabase';
+import { useSession } from '@/components/ctx';
 
 export default function TabTwoScreen() {
   const reservationPlaceholder = [
@@ -18,8 +20,51 @@ export default function TabTwoScreen() {
 
   const reservationData = reservationPlaceholder.map(item => ({...item, isSelected : false}))
   const [reservationList, setReservationList] = useState(null)
+  const {signIn,signOut,userData,userEmail,isLoading} = useSession()
+  function extractYear(dateString: string): number {
+    const [year, ,] = dateString.split('-');
+    return parseInt(year, 10);
+  }
 
-  // const fetchData = 
+  function extractMonth(dateString: string): number {
+    const [, month,] = dateString.split('-');
+    return parseInt(month, 10);
+  }
+
+
+  function extractDay(dateString: string): number {
+    const [, , day] = dateString.split('-');
+    return parseInt(day, 10);
+  }
+
+
+  const fetchData = async () => {
+    // const {data, error} = await supabase.from("Reservation").select("*").eq("user_id", userData.user_id)
+    const {data, error} = await supabase.from("Reservation").select("*")
+    if (error){
+      console.log("get Reservation fail!",error)
+    } else {
+      const {data : data2, error : error2} = await supabase.from("Room").select("*")
+      
+      if (error2) {
+        
+      } else if (data2.length * data.length > 0) {
+        const reservationData = data.map(item => {
+
+          const matchingRoom = data2.find(item2 => 
+            item2.room_number == item.room_number && item2.room_floor == item.room_floor
+          )
+          return {id : item.reservation_id, startTime : item.reservation_time_start,
+          endTime : item.reservation_time_end, day : extractDay(item.reservation_date), month : extractMonth(item.reservation_date), year : extractYear(item.reservation_date),
+          roomName : matchingRoom.room_name, roomCapacity : matchingRoom.room_capacity, roomFloor : matchingRoom.room_floor}
+
+        })
+        setReservationList(reservationData)
+        
+      }
+      
+    }
+  }
 
   const renderReservation = ({item}) => {
     return (
@@ -37,6 +82,8 @@ export default function TabTwoScreen() {
       </View>
     )
   }
+
+  useEffect(() => {fetchData()} ,[])
 
   return (
     <View style={{flex: 1, alignItems: 'center', marginVertical: 10, backgroundColor: 'white'}}>
