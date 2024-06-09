@@ -10,5 +10,5 @@
 Repositori ini berisi sumber kode program untuk komponen Mobile App dari sistem OfficeNexus yang telah dikembangkan oleh kelompok 5 K2 II3240 Rekayasa Sistem dan Teknologi Informasi.
 
 # Cara Instalasi
-1. Unduh file .apk ke perangkat smartphone Android
+1. Unduh file .apk di bagian releases ke perangkat smartphone Android
 2. Setelah mengunduh, lakukan instalasi terhadap aplikasi
