@@ -65,7 +65,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           alert('Invalid email or password');
         }
         setIsSigningIn(false);
-        router.replace("/(tabs)/")
+        router.replace("/main/")
       ;
     };
     }
@@ -74,6 +74,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
 
   const signOut = () => {
     setUserEmail(null);
+    router.replace("/")
   };
 
   return (
