@@ -151,6 +151,11 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
 
         if (error) {
             console.log("reserve Error", error)
+        } else {
+            const {data : data2, error : error2} = await supabase.from("reservation_view_log").insert([{
+                
+            }])
+
         }
     }
     return (

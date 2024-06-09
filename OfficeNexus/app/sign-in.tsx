@@ -1,5 +1,5 @@
 import { router, useNavigation } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Text, TextInput, View, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { useSession } from '../components/ctx';
 
@@ -10,27 +10,23 @@ const screenWidth = 360;
 const screenHeight = 800;
 
 export default function SignIn() {
-  const { signIn } = useSession();
+  const {signIn,signOut,userData,userEmail,isLoading} = useSession()
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [error, setError] = useState('');
-
+  
   const handleSignIn = async () => {
-    setIsSigningIn(true);
-    setError('');
-
-    try {
-      await signIn(email, password);
-      // Navigate after successful sign-in
-      router.replace('/');
-    } catch (err) {
-      setError('Invalid email or password');
-    } finally {
-      setIsSigningIn(false);
-    }
+    signIn(email, password)
   };
+
+  useEffect( () => {
+    if(userData != null) {
+        
+    }
+  }, [userData])
+
 
   return (
     <View style={ styles.layout }>

@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { useStorageState } from './useStorageState';
-
+import { supabase } from '@/utils/supabase';
+import { router } from 'expo-router';
+const bcrypt = require('bcryptjs');
 // Hardcoded user data (replace with API call later)
 const userData = {
   email: 'asd',
   password: 'asd',
 };
 
+
+
 const AuthContext = React.createContext<{
   signIn: (email: string, password: string) => void;
   signOut: () => void;
+  userData : any;
   userEmail?: string | null;
   isLoading: boolean;
+  
 }>({
   signIn: () => null,
   signOut: () => null,
+  userData : null,
   userEmail: null,
   isLoading: false,
 });
@@ -33,20 +40,37 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [[isLoading, userEmail], setUserEmail] = useStorageState('userEmail');
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [userData, setUserData]= useState(null)
 
-  const signIn = (email: string, password: string) => {
+  const signIn = async (email: string, password: string) => {
     setIsSigningIn(true);
+    const {data, error} = await supabase.from("User").select("*").eq("email", email ).single()
+    if (error) {
+      console.log("login_error",error)
+      setIsSigningIn(false)
+      
+    } else if (data == null) {
+      setIsSigningIn(false)
+      console.log("email does not exist", email)
+      
+    }
+     
+    else {
+      const isPasswordValid = await bcrypt.compare(password, data.hashed_password);
 
-    // Simulate an asynchronous sign-in process
-    setTimeout(() => {
-      if (email === userData.email && password === userData.password) {
-        setUserEmail(email);
-      } else {
-        alert('Invalid email or password');
-      }
-      setIsSigningIn(false);
-    }, 1000);
-  };
+        if (isPasswordValid) {
+          setUserEmail(email);
+          setUserData(data);
+        } else {
+          alert('Invalid email or password');
+        }
+        setIsSigningIn(false);
+        router.replace("/(tabs)/")
+      ;
+    };
+    }
+    
+
 
   const signOut = () => {
     setUserEmail(null);
@@ -57,6 +81,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
       value={{
         signIn,
         signOut,
+        userData,
         userEmail,
         isLoading: isLoading || isSigningIn,
       }}
