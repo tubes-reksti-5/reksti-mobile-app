@@ -13,7 +13,11 @@ interface RoomProps {
     isSelected?: boolean,
     setIsSelected : (id: string) => void;
     roomName?: string,
-    roomCapacity?: number
+    roomCapacity?: number,
+    room_floor? : number,
+    room_number? : number,
+    array : []
+
 }
 
 function TabBarIcon(props: {
@@ -25,21 +29,83 @@ function TabBarIcon(props: {
 
 const screenWidth = Dimensions.get('window').width;
 
-const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, setIsSelected }) => {
+const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, setIsSelected, room_floor, room_number, array }) => {
     const [date, setDate] = React.useState(new Date()); // Default Date Value of Today
     const [showDatePicker, setShowDatePicker] = React.useState(false);
     const [startTime, setStartTime] = React.useState(new Date());
     const [endTime, setEndTime] = React.useState(new Date(Date.now() + 1.5 * 60 * 60 * 1000)); // 1.5 hours after start time
     const [showStartTimePicker, setShowStartTimePicker] = React.useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = React.useState(false);
-    
+    const [isAvaible, setAvaible] = React.useState(false)
     let containerStyle;
+
+    function timeStringToSeconds(timeString) {
+        const [hours, minutes, seconds] = timeString.split(':').map(Number);
+        return hours * 3600 + minutes * 60 + seconds;
+      }
+    
+    function convertToSeconds(dateString) {
+        const date = new Date(dateString);
+    
+        
+        const hours = date.getUTCHours();
+        const minutes = date.getUTCMinutes();
+        const seconds = date.getUTCSeconds();
+    
+        
+        const totalSeconds = (hours * 3600) + (minutes * 60) + seconds + 25200;
+    
+        return totalSeconds;
+      }
+
+    function extractDate(dateString) {
+        const date = new Date(dateString);
+    
+        
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+    
+        
+        const formattedDate = `${year}-${month}-${day}`;
+    
+        return formattedDate;
+    }
+    function filterFunc(start1, end1, date1, start2, end2, date2) {
+        console.log(start1, end1, date1, start2, end2, date2)
+        if (date1 != date2) {
+            
+          return false
+        }
+        else if (end1 < start2 || end2 < start1) {
+            console.log("HAHA")
+          return false;
+        } else {
+          return true;
+          
+      }
+    }
+
+    const checkAvaible = () => {
+        
+        const reserve = array.filter(item => filterFunc( convertToSeconds(startTime), convertToSeconds(endTime), extractDate(date), 
+        timeStringToSeconds(item.reservation_time_start), timeStringToSeconds(item.reservation_time_end), item.reservation_date)  )
+        if (reserve.length > 0) {
+          return setAvaible(false)
+        } else {
+          return setAvaible(true)
+        }
+    }
 
     if (isSelected) {
         containerStyle = styles.selected
     } else {
         containerStyle = styles.unselected
     }
+
+    React.useEffect( () => {checkAvaible(); 
+        console.log(startTime, endTime)
+    } ,[date, startTime, endTime])
 
     const onStartTimeChange = (event: Event, selectedTime: TimeData) => {
         if (selectedTime) {
@@ -148,12 +214,15 @@ const Room: React.FC<RoomProps> = ({ isSelected, roomName, roomCapacity, id, set
                         </View>
                     </View>
                     <View  style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}> 
+                    {isAvaible  ?    <Text style={[ styles.text, { fontSize: 16, fontWeight: 'bold',  color: '#444444' }]}>
+                            Tersedia
+                        </Text> : 
                         <Text style={[ styles.text, { fontSize: 16, fontWeight: 'bold',  color: '#444444' }]}>
-                            Placeholder
-                        </Text>
+                        Tidak Tersedia
+                    </Text> }
                     </View>
                     <View  style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}> 
-                        <TouchableOpacity>
+                        <TouchableOpacity disabled={!isAvaible}>
                             <View style={styles.button}>
                                 <Text style={[ styles.text, { fontSize: 16, fontWeight: 'bold', color: 'white' }]}>
                                     Reserve
@@ -224,7 +293,7 @@ const styles = StyleSheet.create({
         height: screenWidth * (190/360),
     },
     text: {
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
     },
     DatePickerContainer: {
         flexDirection: 'row',

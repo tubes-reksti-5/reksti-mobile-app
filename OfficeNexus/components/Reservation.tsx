@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
     text: {
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
         color: '#444444'
     },
 });

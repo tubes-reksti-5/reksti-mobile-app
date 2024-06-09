@@ -17,7 +17,9 @@ export default function TabTwoScreen() {
   ]
 
   const reservationData = reservationPlaceholder.map(item => ({...item, isSelected : false}))
-  const [reservationList, setReservationList] = useState(reservationData)
+  const [reservationList, setReservationList] = useState(null)
+
+  // const fetchData = 
 
   const renderReservation = ({item}) => {
     return (

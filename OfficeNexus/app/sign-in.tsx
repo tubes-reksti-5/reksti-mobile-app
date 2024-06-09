@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         height: screenWidth * (190/360),
     },
     text: {
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
     },
     inputContainer: {
         flexDirection: 'row',
