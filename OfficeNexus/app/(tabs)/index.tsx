@@ -21,7 +21,7 @@ export default function TabOneScreen() {
 
 
   const fetchData = async () => {
-    const {data, error } = await supabase.from("Room").select("*")
+    const {data, error } = await supabase.from("Room").select("*").eq("isDeleted", false)
     if (error) {
       console.log("Get Room Error", error)
     } else {
